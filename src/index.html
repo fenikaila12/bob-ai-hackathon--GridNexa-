@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PortFlow AI — Container Congestion Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- Inline SVG logo -->
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="3" width="22" height="18" rx="3" fill="var(--accent)" />
+            <path d="M4 8h16M4 12h10" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="product">PortFlow AI</div>
+          <div class="subtitle">Operations Intelligence</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-page="dashboard">Dashboard</button>
+        <button class="nav-item" data-page="vessels">Vessel Management</button>
+        <button class="nav-item" data-page="congestion">Congestion Monitor</button>
+        <button class="nav-item" data-page="allocations">Berth & Crane Allocation</button>
+        <button class="nav-item" data-page="routes">Route Optimiser</button>
+        <button class="nav-item" data-page="plan">72-Hour Operations Plan</button>
+        <button class="nav-item" data-page="analytics">Analytics</button>
+        <button class="nav-item" data-page="about">About</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status">
+          <span class="dot green"></span>
+          <div>
+            <div class="small muted">System Status</div>
+            <div>Operational</div>
+          </div>
+        </div>
+        <div class="profile">
+          <div class="small muted">Port Operations</div>
+          <div class="bold">Supervisor</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="left">
+          <button id="mobileToggle" class="mobile-toggle">☰</button>
+          <div>
+            <h1 id="pageTitle">Port Operations Dashboard</h1>
+            <div class="muted">Real-time operational overview and congestion intelligence</div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="search">
+            <input id="globalSearch" placeholder="Search vessels..." />
+            <button id="searchClear" title="Clear">✕</button>
+          </div>
+          <div class="icon-btn" id="notifBtn">🔔<span id="notifCount">3</span></div>
+          <div class="datetime" id="datetime">--:--</div>
+          <div class="small status-inline"><span class="dot green"></span>Operational</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- Pages -->
+        <div class="page" id="dashboard">
+          <div class="welcome">
+            <div>
+              <div class="greeting">Good morning, Port Operations Supervisor</div>
+              <div class="muted">Here's your operational overview for today.</div>
+            </div>
+            <div class="label">PORTFLOW AI • OPERATIONS INTELLIGENCE</div>
+          </div>
+
+          <div class="kpis">
+            <div class="card kpi" id="kpi-vessels">
+              <div class="kpi-icon">⛴️</div>
+              <div class="kpi-body">
+                <div class="kpi-value" id="kpiVessels">--</div>
+                <div class="kpi-label">TOTAL VESSELS</div>
+                <div class="muted">6 arriving today</div>
+              </div>
+            </div>
+
+            <div class="card kpi" id="kpi-berths">
+              <div class="kpi-icon">⚓</div>
+              <div class="kpi-body">
+                <div class="kpi-value" id="kpiBerths">--%</div>
+                <div class="kpi-label">BERTH UTILISATION</div>
+                <div class="muted">14 of 18 berths active</div>
+              </div>
+            </div>
+
+            <div class="card kpi" id="kpi-congestion">
+              <div class="kpi-icon">🚦</div>
+              <div class="kpi-body">
+                <div class="kpi-value" id="kpiRisk">--</div>
+                <div class="kpi-label">CONGESTION RISK</div>
+                <div class="muted">3 hotspots detected</div>
+              </div>
+            </div>
+
+            <div class="card kpi" id="kpi-cranes">
+              <div class="kpi-icon">🦺</div>
+              <div class="kpi-body">
+                <div class="kpi-value" id="kpiCranes">--</div>
+                <div class="kpi-label">AVAILABLE CRANES</div>
+                <div class="muted">of 18 total cranes</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="large-card card">
+              <div class="card-header">Port Congestion Overview</div>
+              <div class="chart" id="terminalChart">
+                <!-- Custom chart rendered by JS -->
+              </div>
+            </div>
+
+            <div class="side-card card">
+              <div class="card-header">Operational Alerts</div>
+              <div id="alerts">
+                <!-- Alerts inserted by JS -->
+              </div>
+            </div>
+
+            <div class="full card">
+              <div class="card-header">Vessel Activity</div>
+              <div class="table-wrap">
+                <table id="vesselTable">
+                  <thead>
+                    <tr>
+                      <th>Vessel</th><th>IMO</th><th>ETA</th><th>Terminal</th><th>Berth</th><th>Status</th><th>Congestion Risk</th><th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vessel Management Page -->
+        <div class="page hidden" id="vessels">
+          <div class="page-header">
+            <h2>Vessel Management</h2>
+            <div>
+              <button id="addVesselBtn" class="primary">Add Vessel</button>
+            </div>
+          </div>
+
+          <div class="filters bar">
+            <input id="vesselSearch" placeholder="Search vessels..." />
+            <select id="filterStatus"><option value="">All Status</option><option>Arriving</option><option>Scheduled</option><option>At Risk</option><option>At Berth</option></select>
+            <select id="filterRisk"><option value="">All Risk</option><option>Low</option><option>Medium</option><option>High</option></select>
+          </div>
+
+          <div class="card full">
+            <div class="table-wrap">
+              <table id="manageTable">
+                <thead><tr><th>Vessel</th><th>IMO</th><th>ETA</th><th>Containers</th><th>Terminal</th><th>Priority</th><th>Status</th><th>Risk</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Congestion Monitor -->
+        <div class="page hidden" id="congestion">
+          <h2>Congestion Intelligence</h2>
+          <div class="muted">Identify potential congestion hotspots before they impact operations.</div>
+
+          <div class="terminals">
+            <!-- terminal cards -->
+            <div class="terminal card" data-terminal="North">
+              <div class="terminal-title">North Terminal</div>
+              <div class="terminal-meta">Capacity: <span class="cap">92%</span></div>
+              <div class="progress"><div class="bar high" style="width:92%"></div></div>
+              <div class="risk high">Risk: HIGH</div>
+            </div>
+            <div class="terminal card" data-terminal="South">
+              <div class="terminal-title">South Terminal</div>
+              <div class="terminal-meta">Capacity: <span class="cap">68%</span></div>
+              <div class="progress"><div class="bar med" style="width:68%"></div></div>
+              <div class="risk med">Risk: MEDIUM</div>
+            </div>
+            <div class="terminal card" data-terminal="East">
+              <div class="terminal-title">East Terminal</div>
+              <div class="terminal-meta">Capacity: <span class="cap">44%</span></div>
+              <div class="progress"><div class="bar low" style="width:44%"></div></div>
+              <div class="risk low">Risk: LOW</div>
+            </div>
+            <div class="terminal card" data-terminal="West">
+              <div class="terminal-title">West Terminal</div>
+              <div class="terminal-meta">Capacity: <span class="cap">76%</span></div>
+              <div class="progress"><div class="bar med" style="width:76%"></div></div>
+              <div class="risk med">Risk: MEDIUM</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">Congestion Prediction</div>
+            <div class="timeline" id="predictionTimeline">
+              <!-- timeline populated by JS -->
+            </div>
+            <div class="muted">Prototype Analysis — Based on Sample Operational Data</div>
+            <div style="margin-top:12px"><button id="runAnalysis" class="primary">Run Congestion Analysis</button></div>
+          </div>
+        </div>
+
+        <!-- Allocations page -->
+        <div class="page hidden" id="allocations">
+          <h2>Berth & Crane Optimiser</h2>
+          <div class="card berth-board" id="berthBoard">
+            <!-- berths rendered by JS -->
+          </div>
+          <div style="margin-top:12px"><button id="runAllocation" class="primary">Run Allocation Optimiser</button></div>
+        </div>
+
+        <!-- Routes -->
+        <div class="page hidden" id="routes">
+          <h2>Alternate Route Recommendations</h2>
+          <div class="muted">When congestion risk exceeds the operational threshold, PortFlow AI recommends alternate terminal or route options.</div>
+          <div id="routeRecs" class="grid recs">
+            <!-- rec cards by JS -->
+          </div>
+        </div>
+
+        <!-- 72-hour plan -->
+        <div class="page hidden" id="plan">
+          <h2>72-Hour Port Operations Plan</h2>
+          <div class="tabs">
+            <button data-range="0" class="tab active">Next 24 Hours</button>
+            <button data-range="1" class="tab">24–48 Hours</button>
+            <button data-range="2" class="tab">48–72 Hours</button>
+          </div>
+          <div class="card full">
+            <div class="table-wrap">
+              <table id="planTable">
+                <thead><tr><th>Time</th><th>Vessel</th><th>Berth</th><th>Crane Assignment</th><th>Operation</th><th>Risk</th><th>Recommendation</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div style="margin-top:12px"><button id="genPlan" class="primary">Generate 72-Hour Plan</button></div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="page hidden" id="analytics">
+          <h2>Port Performance Analytics</h2>
+          <div class="bar filters">
+            <button class="small" data-range="today">Today</button>
+            <button class="small" data-range="7">7 Days</button>
+            <button class="small" data-range="30">30 Days</button>
+          </div>
+
+          <div class="analytics-grid">
+            <div class="card stat">
+              <div class="stat-title">Average vessel waiting time</div>
+              <div class="stat-value" id="statWait">-- min</div>
+            </div>
+            <div class="card stat">
+              <div class="stat-title">Average berth utilisation</div>
+              <div class="stat-value" id="statBerth">--%</div>
+            </div>
+            <div class="card stat">
+              <div class="stat-title">Crane utilisation</div>
+              <div class="stat-value" id="statCrane">--%</div>
+            </div>
+            <div class="card stat">
+              <div class="stat-title">Congestion incidents</div>
+              <div class="stat-value" id="statIncidents">--</div>
+            </div>
+          </div>
+
+          <div class="card full chart-area" id="analyticsChart">
+            <!-- simple bar charts by JS -->
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="page hidden" id="about">
+          <h2>About</h2>
+          <div class="card">
+            <h3>PortFlow AI</h3>
+            <p>PortFlow AI is an academic front-end prototype that demonstrates decision-support tools for port operators to predict congestion hotspots, recommend alternate routes, optimise berth and crane assignments, and generate a 72-hour operations plan.</p>
+            <h4>Problem</h4>
+            <p>Port congestion is often identified too late, causing vessel queues and operational delays.</p>
+            <h4>Solution</h4>
+            <p>A front-end decision-support prototype that visualises vessel schedules, berth capacity, congestion risk, route recommendations, resource allocation and a 72-hour operational plan.</p>
+            <h4>Technology</h4>
+            <p>HTML5 • CSS3 • JavaScript</p>
+            <p><strong>Important:</strong> This project is an academic front-end prototype using simulated operational data.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <footer class="footer">
+        <div>PortFlow AI — Container Congestion Predictor & Port Operations Optimiser</div>
+        <div class="muted">Academic Prototype • Front-End Demonstration</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-backdrop hidden" id="modalBackdrop"></div>
+
+  <div class="modal hidden" id="modal">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
