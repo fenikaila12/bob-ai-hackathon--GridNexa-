@@ -1,121 +1,36 @@
-# 🚀 [Your Project Title Here]
+PortFlow AI — Container Congestion Predictor & Port Operations Optimiser
 
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+Overview
+- This is an academic front-end prototype built with HTML5, CSS3 and vanilla JavaScript.
+- It simulates congestion prediction, route recommendations, berth/crane allocation, and a 72-hour operations plan using sample data.
 
----
+How to run
+1. Open `index.html` in your browser (no server or install required).
 
-## 👥 Team
+Main features
+- Dashboard with KPIs, terminal congestion overview, alerts and vessel activity table.
+- Vessel Management: search, add, edit, remove vessels (modal form).
+- Congestion Monitor: terminal capacity cards, prediction timeline, run simulated analysis.
+- Berth & Crane Optimiser: visual berth board and allocation recommendation simulation.
+- Route Optimiser: alternate route recommendations with accept/view actions.
+- 72-Hour Plan: generate a sample plan in a modal.
+- Analytics: simple stats and filter buttons.
+- Notification dropdown and global search.
 
-| Field | Value |
-|---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+Decision logic (simulated)
+- Risk is determined from terminal capacity: capacity > 85% -> HIGH; >65% -> MEDIUM; else LOW.
+- Route recommendations suggest lower-risk terminals when a terminal is HIGH risk.
+- Berth allocation simulation avoids occupied berths and recommends available ones.
 
----
+Files
+- index.html — main layout and pages
+- style.css — design system and responsive styles
+- script.js — application data, UI rendering and interactions
+- README.md — this file
 
-## 🎯 Problem Statement
+Notes
+- This is intentionally a front-end-only prototype. It uses simulated/sample data and deterministic JavaScript rules to demonstrate the concept.
+- No external libraries or back-end services are used.
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
-
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
-
----
-
-## 💡 Solution
-
-> In 2–3 sentences: What did you build? How does it solve the problem above?
-
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
-
----
-
-## ✨ Key Features
-
-- **Feature 1:** [Brief description — e.g., "Real-time anomaly detection using watsonx.ai"]
-- **Feature 2:** [Brief description]
-- **Feature 3:** [Brief description]
-- **Feature 4:** [Optional]
-- **Feature 5:** [Optional]
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Technologies |
-|---|---|
-| **Languages** | [e.g., Python, TypeScript] |
-| **Frameworks** | [e.g., FastAPI, React] |
-| **IBM Technologies** | [e.g., watsonx.ai, IBM Bob, IBM Cloud] |
-| **Databases** | [e.g., PostgreSQL, Redis] |
-| **Other** | [e.g., Docker, GitHub Actions] |
-
----
-
-## 📁 Repository Structure
-
-```
-├── src/                  # All source code
-├── docs/                 # Written documentation
-│   ├── problem-statement.md
-│   ├── solution-overview.md
-│   ├── architecture.md
-│   └── setup-guide.md
-├── demo/                 # Demo artifacts
-│   ├── screenshots/      # App screenshots
-│   └── demo-video-link.txt  # Link to demo video
-├── presentation/         # Slide deck
-└── submission.yaml       # Structured submission metadata
-```
-
----
-
-## ⚡ How to Run
-
-> **Copy these exact steps from your [`docs/setup-guide.md`](docs/setup-guide.md)**
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
-
-# 2. Install dependencies
-[your install command here]
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your values
-
-# 4. Run the project
-[your run command here]
-```
-
----
-
-## 🖥️ Demo
-
-| Artifact | Link |
-|---|---|
-| 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
-| 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
-| 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | [See presentation/slides.pdf](presentation/) |
-
----
-
-## ⚠️ Known Limitations
-
-> Be honest — judges appreciate transparency over overclaiming.
-
-- [Limitation 1: e.g., "Authentication is mocked — not production-ready"]
-- [Limitation 2: e.g., "Only tested on Chrome"]
-- [Limitation 3: e.g., "Feature X is scaffolded but not fully implemented"]
-
----
-
-## 🏅 What We're Most Proud Of
-
-[Tell the judges what part of your submission is strongest and worth paying close attention to.]
-
----
+Academic integrity
+- Do not claim the prototype uses real-time vessel tracking, live AI, or production optimisation algorithms. The README and UI clearly label simulations and prototype assumptions.
