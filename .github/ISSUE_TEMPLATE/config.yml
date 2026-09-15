@@ -1,5 +1,6 @@
 blank_issues_enabled: false
+
 contact_links:
-  - name: 🙋 Hackathon Help & Questions
-    url: https://github.com/your-org/hackathon-submission-template/discussions
-    about: Ask questions about the submission template or hackathon rules here.
+  - name: "🙋 Hackathon Help & Questions"
+    url: "https://github.com/fenikaila12/bob-ai-hackathon--GridNexa-"
+    about: "Ask questions about the hackathon project, submission process, or project documentation here."
